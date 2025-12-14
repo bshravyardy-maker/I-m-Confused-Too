@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Next Step</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: #34495e;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            color: #5a6c7d;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 32px;
+        }
+
+        button {
+            background: #5d9cec;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        button:hover {
+            background: #4a89dc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(93, 156, 236, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #f8f9fa;
+            color: #34495e;
+            padding: 16px 20px;
+            text-align: left;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background: #e9ecef;
+            border-color: #5d9cec;
+            transform: translateY(-1px);
+        }
+
+        .option-btn.selected {
+            background: #ebf4fe;
+            border-color: #5d9cec;
+            color: #2c3e50;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5d9cec, #4a89dc);
+            transition: width 0.4s ease;
+            border-radius: 2px;
+        }
+
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #34495e;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rating-btn:hover {
+            background: #e9ecef;
+            border-color: #5d9cec;
+        }
+
+        .rating-btn.selected {
+            background: #ebf4fe;
+            border-color: #5d9cec;
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 24px;
+        }
+
+        .next-step-box {
+            background: #fff9e6;
+            border-left: 4px solid #ffd700;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 24px;
+        }
+
+        .next-step-box h3 {
+            color: #34495e;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .next-step-box p {
+            color: #5a6c7d;
+            margin-bottom: 0;
+            font-size: 1.05rem;
+        }
+
+        .result-section {
+            margin-bottom: 28px;
+        }
+
+        .result-section h3 {
+            color: #34495e;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .result-section p {
+            color: #5a6c7d;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .back-btn {
+            background: #95a5a6;
+            margin-top: 8px;
+        }
+
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 24px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .rating-scale {
+                gap: 6px;
+            }
+
+            .rating-btn {
+                padding: 10px 6px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcome">
+            <h1>Take a Breath</h1>
+            <p class="subtitle">When everything feels like too much, sometimes you just need one clear next step.</p>
+            <p>This tool will ask you a few quick questions about how you're feeling right now. At the end, you'll get a small, specific action you can take in the next 48 hours—no big commitments, no pressure.</p>
+            <p>It takes about 2 minutes. Ready?</p>
+            <button onclick="startQuestionnaire()">Start</button>
+        </div>
+
+        <!-- Question Screens -->
+        <div class="screen" id="question-screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <h2 id="question-text"></h2>
+            <div id="question-content"></div>
+            <div class="button-group" id="navigation-buttons" style="display: none;">
+                <button class="back-btn" onclick="previousQuestion()">Back</button>
+                <button onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="results">
+            <h1>Here's what might help right now</h1>
+            
+            <div class="result-section">
+                <h3>What might be happening</h3>
+                <p id="result-happening"></p>
+            </div>
+
+            <div class="result-section">
+                <h3>Why it feels confusing</h3>
+                <p id="result-why"></p>
+            </div>
+
+            <div class="result-section">
+                <h3>What approach suits you at this stage</h3>
+                <p id="result-approach"></p>
+            </div>
+
+            <div class="next-step-box">
+                <h3>Your next small step (next 48 hours)</h3>
+                <p id="result-next-step"></p>
+            </div>
+
+            <button onclick="restart()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // User responses
+        const responses = {};
+        let currentQuestion = 0;
+
+        // Questions configuration
+        const questions = [
+            {
+                id: 'mental-state',
+                text: 'How does your mind feel right now?',
+                type: 'single-choice',
+                options: [
+                    { value: 'racing', label: 'Racing with too many thoughts' },
+                    { value: 'foggy', label: 'Foggy, hard to think clearly' },
+                    { value: 'stuck', label: 'Stuck, like I\'m going in circles' },
+                    { value: 'blank', label: 'Blank, can\'t focus on anything' },
+                    { value: 'heavy', label: 'Heavy, everything feels like a burden' }
+                ]
+            },
+            {
+                id: 'emotional-state',
+                text: 'Which feeling is strongest for you right now?',
+                type: 'single-choice',
+                options: [
+                    { value: 'overwhelmed', label: 'Overwhelmed by everything I need to do' },
+                    { value: 'confused', label: 'Confused about what to prioritize' },
+                    { value: 'anxious', label: 'Anxious about making the wrong choice' },
+                    { value: 'tired', label: 'Tired of trying to figure it all out' },
+                    { value: 'numb', label: 'Numb, disconnected from it all' }
+                ]
+            },
+            {
+                id: 'what-need',
+                text: 'What do you need most right now?',
+                type: 'single-choice',
+                options: [
+                    { value: 'clarity', label: 'Clarity on what to focus on' },
+                    { value: 'motivation', label: 'Motivation to get started' },
+                    { value: 'discipline', label: 'Discipline to follow through' },
+                    { value: 'peace', label: 'Peace and less pressure' },
+                    { value: 'permission', label: 'Permission to rest or step back' }
+                ]
+            },
+            {
+                id: 'energy-level',
+                text: 'How much energy do you have right now?',
+                type: 'rating',
+                min: 1,
+                max: 5,
+                labels: { left: 'Almost none', right: 'Plenty' }
+            },
+            {
+                id: 'action-preference',
+                text: 'Which sounds more doable to you at this stage?',
+                type: 'single-choice',
+                options: [
+                    { value: 'think', label: 'Thinking or planning something out' },
+                    { value: 'do', label: 'Doing a small physical action' },
+                    { value: 'talk', label: 'Talking to someone about it' },
+                    { value: 'pause', label: 'Pausing and giving myself space' }
+                ]
+            },
+            {
+                id: 'support-openness',
+                text: 'How open are you to reaching out for support?',
+                type: 'rating',
+                min: 1,
+                max: 5,
+                labels: { left: 'Not ready', right: 'Very open' }
+            }
+        ];
+
+        function startQuestionnaire() {
+            showScreen('question-screen');
+            currentQuestion = 0;
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('question-text').textContent = question.text;
+            
+            const contentDiv = document.getElementById('question-content');
+            contentDiv.innerHTML = '';
+
+            if (question.type === 'single-choice') {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                question.options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = option.label;
+                    btn.onclick = () => selectOption(question.id, option.value, btn);
+                    
+                    if (responses[question.id] === option.value) {
+                        btn.classList.add('selected');
+                    }
+                    
+                    optionsDiv.appendChild(btn);
+                });
+                
+                contentDiv.appendChild(optionsDiv);
+            } else if (question.type === 'rating') {
+                const ratingDiv = document.createElement('div');
+                ratingDiv.className = 'rating-scale';
+                
+                for (let i = question.min; i <= question.max; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'rating-btn';
+                    btn.textContent = i;
+                    btn.onclick = () => selectRating(question.id, i, btn);
+                    
+                    if (responses[question.id] === i) {
+                        btn.classList.add('selected');
+                    }
+                    
+                    ratingDiv.appendChild(btn);
+                }
+                
+                contentDiv.appendChild(ratingDiv);
+                
+                const labelsDiv = document.createElement('div');
+                labelsDiv.className = 'rating-labels';
+                labelsDiv.innerHTML = `<span>${question.labels.left}</span><span>${question.labels.right}</span>`;
+                contentDiv.appendChild(labelsDiv);
+            }
+
+            // Show navigation buttons
+            const navButtons = document.getElementById('navigation-buttons');
+            navButtons.style.display = 'flex';
+            
+            // Hide back button on first question
+            const backBtn = navButtons.querySelector('.back-btn');
+            backBtn.style.display = currentQuestion === 0 ? 'none' : 'block';
+            
+            // If only one button is visible, make it full width
+            if (currentQuestion === 0) {
+                navButtons.style.display = 'block';
+            }
+        }
+
+        function selectOption(questionId, value, button) {
+            responses[questionId] = value;
+            
+            // Remove selected class from siblings
+            const siblings = button.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('selected');
+            }
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            
+            // Auto-advance after selection
+            setTimeout(() => {
+                nextQuestion();
+            }, 300);
+        }
+
+        function selectRating(questionId, value, button) {
+            responses[questionId] = value;
+            
+            // Remove selected class from siblings
+            const siblings = button.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('selected');
+            }
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            
+            // Auto-advance after selection
+            setTimeout(() => {
+                nextQuestion();
+            }, 300);
+        }
+
+        function nextQuestion() {
+            // Check if current question is answered
+            if (!responses[questions[currentQuestion].id]) {
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        function showResults() {
+            const result = calculateResult();
+            
+            document.getElementById('result-happening').textContent = result.happening;
+            document.getElementById('result-why').textContent = result.why;
+            document.getElementById('result-approach').textContent = result.approach;
+            document.getElementById('result-next-step').textContent = result.nextStep;
+            
+            showScreen('results');
+        }
+
+        function calculateResult() {
+            const mentalState = responses['mental-state'];
+            const emotionalState = responses['emotional-state'];
+            const need = responses['what-need'];
+            const energy = responses['energy-level'];
+            const actionPref = responses['action-preference'];
+            const supportOpenness = responses['support-openness'];
+
+            let result = {
+                happening: '',
+                why: '',
+                approach: '',
+                nextStep: ''
+            };
+
+            // Determine what's happening based on mental and emotional state
+            if (mentalState === 'racing' && emotionalState === 'overwhelmed') {
+                result.happening = "You're dealing with a lot at once, and your brain is trying to process everything simultaneously. This is a common response when there are multiple demands competing for your attention right now.";
+            } else if (mentalState === 'foggy' || mentalState === 'blank') {
+                result.happening = "Your mind might be in a protective mode right now, making it harder to think clearly. This often happens when you've been pushing through for a while without a real break.";
+            } else if (mentalState === 'stuck' || emotionalState === 'confused') {
+                result.happening = "You're caught in a decision loop right now—your mind keeps cycling through options without landing on a clear path forward. This is often a sign that you need a different perspective or a smaller starting point.";
+            } else if (emotionalState === 'tired' || emotionalState === 'numb') {
+                result.happening = "You might be experiencing decision fatigue or emotional exhaustion right now. When you've been managing a lot for a while, your system naturally starts to shut down as a form of self-protection.";
+            } else if (emotionalState === 'anxious') {
+                result.happening = "You're holding a lot of concern about outcomes right now. Your mind is working overtime trying to predict and prevent potential problems, which takes up significant mental space.";
+            } else {
+                result.happening = "You're navigating a period where multiple internal signals are competing for priority. This creates a sense of static that makes it hard to hear what you actually need right now.";
+            }
+
+            // Explain why it feels confusing
+            if (need === 'clarity' || mentalState === 'stuck') {
+                result.why = "It feels confusing because you're trying to see the whole picture all at once. When there are multiple valid paths or priorities, your brain struggles to rank them without more information. The confusion isn't a flaw—it's your mind telling you that you need to narrow the scope for now.";
+            } else if (need === 'peace' || emotionalState === 'overwhelmed') {
+                result.why = "The confusion comes from trying to manage too many inputs at the same time. Your mental bandwidth is stretched, so even simple decisions can feel impossible. This isn't about lacking capability—it's about your system being overloaded at this stage.";
+            } else if (need === 'permission') {
+                result.why = "Part of the confusion might be coming from an internal conflict—one part of you knows you need rest, while another part feels like you should keep pushing. This internal tension creates noise that makes everything else harder to interpret.";
+            } else if (energy <= 2) {
+                result.why = "When your energy is low, your brain conserves resources by making everything feel less clear. Decisions that might normally feel straightforward suddenly seem impossible. The confusion is a symptom of depletion, not a reflection of your actual capacity.";
+            } else {
+                result.why = "You're dealing with several legitimate needs at once, and they don't all point in the same direction right now. The confusion is actually your system trying to honor multiple truths simultaneously, which is complex work.";
+            }
+
+            // Suggest approach based on need and action preference
+            if (need === 'clarity' && actionPref === 'think') {
+                result.approach = "For now, focus on externalizing your thoughts rather than solving everything internally. Writing, voice notes, or talking out loud can help you see patterns you can't access while everything stays in your head. The goal isn't to find the perfect answer—it's just to create some distance between you and the noise.";
+            } else if (need === 'clarity' && actionPref !== 'think') {
+                result.approach = "Instead of trying to think your way to clarity, let action create it for you. Pick the smallest, most obvious task and do it. Often, clarity emerges from movement rather than analysis. You're gathering information through doing, not planning.";
+            } else if (need === 'motivation' && energy >= 3) {
+                result.approach = "You have some energy available right now—use it for momentum, not planning. Start with something so small it feels almost silly. The motivation you're looking for often shows up after you begin, not before. You're building proof of capability, one tiny step at a time.";
+            } else if (need === 'motivation' && energy < 3) {
+                result.approach = "With low energy right now, don't wait for motivation to arrive—it probably won't. Instead, lower the bar drastically. Make the action so small that motivation isn't required. You're working with what you have at this stage, not what you wish you had.";
+            } else if (need === 'discipline') {
+                result.approach = "Discipline works best when it's paired with structure, not willpower. For now, focus on setting up one tiny external anchor—a specific time, place, or trigger. You're not trying to become more disciplined in general; you're just creating one reliable pattern.";
+            } else if (need === 'peace') {
+                result.approach = "Peace right now might mean giving yourself explicit permission to not optimize everything. You don't need to find the best path or the most efficient strategy—you just need to find something that feels manageable. Lower the stakes for this stage.";
+            } else if (need === 'permission' || actionPref === 'pause') {
+                result.approach = "You have permission to pause without fixing anything first. Rest doesn't have to be earned, and taking space doesn't mean you're giving up. For now, the most productive thing you can do is step back intentionally rather than pushing through until you collapse.";
+            } else if (actionPref === 'talk' && supportOpenness >= 3) {
+                result.approach = "You're open to connection right now, which is a resource. Find one person you trust and say exactly what you're feeling—not to get advice, just to hear yourself speak it out loud. Sometimes confusion dissolves when it's witnessed by someone else.";
+            } else {
+                result.approach = "For now, focus on reducing complexity rather than solving it. Pick one small area where you can create certainty, even if it's not the most important thing. You're building stability in one corner while the rest stays messy—that's okay for this stage.";
+            }
+
+            // Generate specific next step
+            if (actionPref === 'think' && need === 'clarity') {
+                result.nextStep = "In the next 48 hours: Spend 10 minutes writing down everything that feels urgent or confusing. Don't organize it—just dump it onto paper or a notes app. Then walk away. You're not solving it, just externalizing it.";
+            } else if (actionPref === 'do' && energy >= 3) {
+                result.nextStep = "In the next 48 hours: Pick one physical space (your desk, a shelf, your bag) and spend 5 minutes organizing it. This isn't about productivity—it's about proving to yourself that you can create order in one small area.";
+            } else if (actionPref === 'do' && energy < 3) {
+                result.nextStep = "In the next 48 hours: Choose one surface in your space (a table, counter, or desk corner) and clear it completely. Put everything somewhere else—don't sort it, just move it. You're creating one visible clean space, that's all.";
+            } else if (actionPref === 'talk' && supportOpenness >= 4) {
+                result.nextStep = "In the next 48 hours: Send a message to one person you trust. Say: 'I'm feeling pretty overwhelmed and confused right now. I don't need advice, just wanted to say it out loud to someone.' That's the whole message.";
+            } else if (actionPref === 'talk') {
+                result.nextStep = "In the next 48 hours: Record a 3-minute voice note to yourself describing how you're feeling right now. You don't need to send it to anyone—just speak it out loud. Sometimes hearing your own voice creates clarity that thinking alone can't.";
+            } else if (actionPref === 'pause' || need === 'permission') {
+                result.nextStep = "In the next 48 hours: Set a timer for 20 minutes and do absolutely nothing productive. No phone, no work, no planning. Sit, walk, stare out a window—just exist without optimizing. This is a practice, not a break you have to earn.";
+            } else if (need === 'motivation') {
+                result.nextStep = "In the next 48 hours: Pick one task that takes less than 5 minutes and do it immediately without thinking about it. Cross it off a list if you have one. You're proving to yourself that completion is possible, even in small form.";
+            } else if (need === 'discipline') {
+                result.nextStep = "In the next 48 hours: Choose one time tomorrow (be specific: '2:15 PM') when you'll do one small task (be specific: 'reply to one email'). Set an alarm. When it goes off, do only that task. You're practicing the feeling of following through.";
+            } else if (mentalState === 'foggy' || mentalState === 'blank') {
+                result.nextStep = "In the next 48 hours: Go outside for a 10-minute walk without your phone or earbuds. Don't try to think through your problems—just move your body and notice what's around you. You're resetting your system, not solving anything.";
+            } else if (energy <= 2) {
+                result.nextStep = "In the next 48 hours: Identify one thing you're currently doing that isn't essential right now. Give yourself permission to not do it for the next three days. You're practicing subtraction instead of addition.";
+            } else {
+                result.nextStep = "In the next 48 hours: Write down three things that would be true if you felt less confused right now. Don't try to make them happen—just notice what they are. You're clarifying the target, not reaching it yet.";
+            }
+
+            return result;
+        }
+
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function restart() {
+            Object.keys(responses).forEach(key => delete responses[key]);
+            currentQuestion = 0;
+            showScreen('welcome');
+        }
+    </script>
+</body>
+</html>
